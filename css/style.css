@@ -203,11 +203,12 @@ section { padding: 88px 0; }
 
 .logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
 .logo img {
-  height: 64px;
-  width: 64px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid var(--teal);
+  height: 62px;
+  width: auto;            /* logo completo, sin recortar */
+  object-fit: contain;
+  background: #fff;
+  padding: 4px 8px;
+  border-radius: 10px;
 }
 .logo-texto { display: flex; flex-direction: column; line-height: 1.15; }
 .logo-texto strong { font-family: var(--font-display); color: var(--white); font-size: 20px; letter-spacing: 0.02em; }
@@ -362,12 +363,13 @@ section { padding: 88px 0; }
 .sello:nth-child(2) { transform: rotate(3deg); }
 .sello:nth-child(3) { transform: rotate(-3deg); }
 
-/* Collage de imágenes del hero */
+/* Collage de imágenes del hero:
+   foto principal COMPLETA arriba (misma proporción que el archivo, sin recorte)
+   y tres fotos cuadradas debajo, en fila. */
 .hero__gallery {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 130px 130px 130px;
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
 .hero__gallery figure {
@@ -376,12 +378,10 @@ section { padding: 88px 0; }
   overflow: hidden;
   box-shadow: var(--shadow-l);
   z-index: 1;
+  aspect-ratio: 1 / 1;
 }
-.hero__gallery img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
-.hero__gallery .g1 { grid-column: 1 / 2; grid-row: 1 / 3; }
-.hero__gallery .g2 { grid-column: 2 / 3; grid-row: 1 / 2; }
-.hero__gallery .g3 { grid-column: 2 / 3; grid-row: 2 / 4; }
-.hero__gallery .g4 { grid-column: 1 / 2; grid-row: 3 / 4; }
+.hero__gallery img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+.hero__gallery .g1 { grid-column: 1 / -1; aspect-ratio: 797 / 435; }
 
 /* ============================================================
    Servicios — tarjetas estilo "ficha de trabajo"
@@ -392,7 +392,7 @@ section { padding: 88px 0; }
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
   gap: 26px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .tarjeta-servicio {
@@ -411,16 +411,37 @@ section { padding: 88px 0; }
 
 .tarjeta-servicio__media {
   position: relative;
-  aspect-ratio: 4 / 3;
-  background: linear-gradient(160deg, #E9EEF1 0%, #D9E2E7 100%);
+  aspect-ratio: 5 / 4;
+  background: #DCE4E9;
   overflow: hidden;
+  cursor: zoom-in;
 }
-/* La foto se muestra COMPLETA (sin recortes), centrada en la caja */
+/* La foto llena toda la casilla; el encuadre de cada una se ajusta con
+   object-position (en el HTML). Al tocarla se abre COMPLETA (ver lightbox). */
 .tarjeta-servicio__media img {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
+  object-fit: contain; /* la foto SIEMPRE se ve completa */
+  display: block;
+  transition: transform 0.4s ease;
+}
+.tarjeta-servicio__media:hover img { transform: scale(1.03); }
+.tarjeta-servicio__media:focus-visible { outline: 3px solid var(--teal); outline-offset: -3px; }
+.tarjeta-servicio__media::after {
+  content: "Ver foto completa";
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background: rgba(11, 36, 54, 0.78);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+  pointer-events: none;
 }
 .tarjeta-servicio__codigo {
   position: absolute;
@@ -474,6 +495,51 @@ section { padding: 88px 0; }
 .tarjeta-servicio__body p { color: var(--muted); font-size: 14px; margin-bottom: 18px; flex-grow: 1; }
 /* Si el párrafo va seguido de una lista, no se estira (evita el hueco) */
 .tarjeta-servicio__body p:has(+ .tarjeta-servicio__lista) { flex-grow: 0; margin-bottom: 14px; }
+
+/* ---- Tarjetas compactas: descripción recortada + botón "Ver más" ----
+   Solo se activa con JavaScript (clase .js); sin JS todo se muestra completo. */
+.tarjeta-servicio__body p { line-height: 1.55; }
+.js .tarjeta-servicio__body h3 { line-height: 1.2; }
+.js .tarjeta-servicio:not(.abierta) .tarjeta-servicio__body p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 4.65em;
+  flex-grow: 0;
+}
+.js .tarjeta-servicio__body p { margin-bottom: 8px; flex-grow: 0; }
+.js .tarjeta-servicio:not(.abierta) .tarjeta-servicio__lista { display: none; }
+.js .tarjeta-servicio.abierta .tarjeta-servicio__body p { margin-bottom: 14px; }
+.tarjeta-servicio__mas {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 0;
+  padding: 6px 0;
+  margin: 0 0 14px;
+  color: var(--teal-dark);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tarjeta-servicio__mas::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.25s ease;
+}
+.tarjeta-servicio.abierta .tarjeta-servicio__mas::after { transform: rotate(-135deg) translateY(-2px); }
+.tarjeta-servicio__mas:hover { text-decoration: underline; }
+.tarjeta-servicio__mas:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
+/* Mantiene el mismo alto cuando una tarjeta no tiene nada más que mostrar */
+.tarjeta-servicio__mas.sin-mas { visibility: hidden; pointer-events: none; }
 
 /* Lista de características (servicios con varios puntos destacados) */
 .tarjeta-servicio__lista {
@@ -673,7 +739,7 @@ footer {
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 .footer__marca { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.footer__marca img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+.footer__marca img { height: 52px; width: auto; border-radius: 8px; object-fit: contain; background: #fff; padding: 3px 7px; }
 .footer__marca strong { color: var(--white); font-family: var(--font-display); font-size: 16px; }
 .footer p { font-size: 14px; max-width: 320px; }
 footer h4 { color: var(--white); font-size: 14px; margin-bottom: 16px; letter-spacing: 0.04em; text-transform: uppercase; }
@@ -704,7 +770,7 @@ footer ul a:hover { color: var(--teal); }
 
   /* Encabezado + menú desplegable (hamburguesa) */
   .header__inner { padding-top: 10px; padding-bottom: 10px; }
-  .logo img { height: 54px; width: 54px; }
+  .logo img { height: 52px; width: auto; }
   .logo-texto strong { font-size: 18px; }
   .menu-toggle { display: flex; }
   .menu {
@@ -739,20 +805,8 @@ footer ul a:hover { color: var(--teal); }
   .sello strong { font-size: 21px; }
   .sello span { font-size: 10px; max-width: 80%; }
 
-  /* Collage del hero: 2 x 2 con fotos del mismo tamaño y orden */
-  .hero__gallery {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: none;
-    grid-auto-rows: auto;
-    gap: 10px;
-    max-width: none;
-  }
-  .hero__gallery figure,
-  .hero__gallery .g1, .hero__gallery .g2, .hero__gallery .g3, .hero__gallery .g4 {
-    grid-column: auto;
-    grid-row: auto;
-    aspect-ratio: 1 / 1;
-  }
+  /* Collage del hero: foto principal completa + 3 cuadradas debajo */
+  .hero__gallery { gap: 8px; max-width: none; }
 
   /* Títulos de sección y textos */
   .section-head { margin-bottom: 32px; }
@@ -793,5 +847,102 @@ footer ul a:hover { color: var(--teal); }
 @media (max-width: 380px) {
   .hero h1 { font-size: 28px; }
   .logo-texto strong { font-size: 16px; }
-  .logo img { height: 48px; width: 48px; }
+  .logo img { height: 44px; width: auto; }
+  .logo-texto { display: none; } /* el logo ya incluye el nombre */
 }
+
+
+/* ============================================================
+   Visor de foto completa (lightbox)
+   ============================================================ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(8, 20, 30, 0.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 16px 24px;
+}
+.lightbox.abierto { display: flex; }
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-l);
+}
+.lightbox__cerrar {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.14);
+  color: var(--white);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+.lightbox__cerrar:hover { background: rgba(255,255,255,0.26); }
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta-servicio__media img, .tarjeta-servicio__mas::after { transition: none; }
+}
+
+
+/* Fondo difuminado: rellena los lados/arriba/abajo con la misma foto
+   para que nunca queden franjas vacías y la foto se vea completa. */
+.tarjeta-servicio__media::before,
+.hero__gallery figure::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background: var(--foto) center / cover no-repeat;
+  filter: blur(18px) brightness(0.85);
+  z-index: 0;
+}
+.hero__gallery img { position: relative; z-index: 1; object-fit: contain; }
+.hero__gallery .g1 img { object-fit: contain; }
+.hero__gallery figure { background: #123449; }
+.tarjeta-servicio__media::after { z-index: 2; }
+.tarjeta-servicio__codigo, .tarjeta-servicio__certificado { z-index: 3; }
+
+/* Miniaturas del inicio: formato 4:3 para que las fotos anchas pierdan menos espacio */
+.hero__gallery figure:not(.g1) { aspect-ratio: 4 / 3; }
+
+
+/* ===== Galería del inicio: mosaico original (fotos llenas, sin franjas) ===== */
+.hero__gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-areas: "a b" "a c" "d c";
+  gap: 14px;
+  aspect-ratio: 721 / 566;
+}
+.hero__gallery figure,
+.hero__gallery .g1 { aspect-ratio: auto; background: #123449; min-height: 0; }
+.hero__gallery figure::before { display: none; }
+.hero__gallery img,
+.hero__gallery .g1 img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.hero__gallery .g1 { grid-area: a; grid-column: auto; }
+.hero__gallery .g2 { grid-area: b; }
+.hero__gallery .g3 { grid-area: c; }
+.hero__gallery .g4 { grid-area: d; }
+.hero__gallery .g1 img { object-position: 62% 50%; }
+.hero__gallery .g2 img { object-position: 50% 50%; }
+.hero__gallery .g3 img { object-position: 50% 40%; }
+.hero__gallery .g4 img { object-position: 45% 50%; }
+@media (max-width: 760px) { .hero__gallery { gap: 8px; } }
+.hero__gallery { grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-rows: repeat(3, minmax(0,1fr)); }
+.hero__gallery figure { height: 100%; width: 100%; }
+.hero__gallery .g1 img { object-position: 84% 50%; }
+
+/* El logo ya trae el nombre de la empresa: se oculta el texto duplicado */
+.logo-texto { display: none; }
+.logo img { height: 64px; }
+@media (max-width: 760px) { .logo img { height: 54px; } }
+@media (max-width: 480px) { .logo img { height: 48px; } }

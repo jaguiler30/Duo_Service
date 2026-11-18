@@ -44,3 +44,23 @@ css/style.css
 js/script.js
 img/            (imágenes renombradas sin espacios ni tildes)
 ```
+
+## Cambios de la ronda "cambiamos_pagina_web.pdf"
+- Hero: la primera imagen ahora es la foto completa del Todero (ancho completo) con 3 fotos debajo.
+- SRV-04 Fumigación de Vectores: foto real en lugar de la ilustración.
+- Tarjetas de servicio: las fotos llenan todo el recuadro (SRV-07, 08, 09, 11 incluidas; SRV-11 con la foto limpia de adoquines). Al tocar una foto se abre COMPLETA (visor).
+- Botón "Ver más / Ver menos": las tarjetas quedan compactas y del mismo alto; al expandir se ve la descripción completa y la lista.
+- Sin JavaScript todo se muestra completo (mejora progresiva).
+- Pendiente de fotos de mayor calidad: Fumigación (477×637 px) y Control de Roedores (309×163 px) se ven algo suaves.
+
+## Ajuste de imágenes (ronda 2)
+- Todas las fotos (tarjetas e inicio) se muestran COMPLETAS (object-fit: contain) sobre un fondo difuminado de la misma foto, sin franjas vacías ni recortes.
+- Las tarjetas usan formato 5:4 y se estiran al mismo alto por fila.
+- Inicio: galería en mosaico original (4 fotos que llenan su recuadro, sin franjas).
+- Nuevas fotos: Suministros e Insumos (SRV-02) y Mantenimiento de Adoquines (SRV-11, también en el inicio).
+
+## SEO y legal (antes de subir)
+Archivos nuevos: robots.txt, sitemap.xml, favicon.ico, img/favicon-32.png, img/apple-touch-icon.png, img/og-image.jpg (1200x630), privacidad.html, 404.html. En index.html: canonical, Open Graph/Twitter y datos estructurados (LocalBusiness).
+
+**IMPORTANTE – reemplazar el dominio:** en index.html, robots.txt y sitemap.xml aparece `https://TU-DOMINIO.com`. Cámbialo por el dominio real (buscar y reemplazar en toda la carpeta). Si primero publicas en github.io, usa esa URL.
+**Completar el NIT** en privacidad.html (busca `[COMPLETAR NIT]`) y pídele al cliente que revise el texto legal.
