@@ -64,3 +64,4 @@ Archivos nuevos: robots.txt, sitemap.xml, favicon.ico, img/favicon-32.png, img/a
 
 **IMPORTANTE – reemplazar el dominio:** en index.html, robots.txt y sitemap.xml aparece `https://TU-DOMINIO.com`. Cámbialo por el dominio real (buscar y reemplazar en toda la carpeta). Si primero publicas en github.io, usa esa URL.
 **Completar el NIT** en privacidad.html (busca `[COMPLETAR NIT]`) y pídele al cliente que revise el texto legal.
+- Logo más grande (84 px escritorio / 60 px celular); última fila de servicios centrada; objetivos estratégicos en 3 columnas (2 en tablet, 1 en celular).
